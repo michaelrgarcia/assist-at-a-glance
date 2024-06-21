@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-dupe-keys */
+
 const path = require("path");
 
 module.exports = {
