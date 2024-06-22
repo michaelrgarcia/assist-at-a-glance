@@ -6,9 +6,11 @@ const port = 10000;
 
 app.use(express.static("../frontend/dist/"));
 
-// eslint-disable-next-line no-undef
 const schoolRouter = require("./routes/schools.js");
 const articulationRouter = require("./routes/articulations.js");
+
+app.use("/schools", schoolRouter);
+app.use("/articulations", articulationRouter);
 
 /*  
 
