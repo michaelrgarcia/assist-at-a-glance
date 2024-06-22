@@ -49,23 +49,16 @@ router.get("/four-years", async (req, res) => {
   res.json(schoolList);
 });
 
-router.get("/major-data/:receiving/:sending/:year", (req, res) => {
-  res.send("Will send JSON from getMajorData()");
-});
+router.get("/major-data/:receiving/:sending/:year", async (req, res) => {
+  const receiving = req.params.receiving;
+  const sending = req.params.sending;
+  const year = req.params.year;
 
-module.exports = router;
-
-/*
-
-import { alphaSort, jsonFromServer } from "./utilities.js";
-
-export function getMajorData(receiving, sending, year) {
   const majorKeysByUni = `https://assist.org/api/agreements?receivingInstitutionId=${receiving}&sendingInstitutionId=${sending}&academicYearId=${year}&categoryCode=major`;
-
-  const json = jsonFromServer(majorKeysByUni);
+  const json = await getJson(majorKeysByUni);
   const majors = Object.values(json); // array
 
-  const majorData = [];
+  let majorData = [];
 
   majors[0].forEach((dataset) => {
     const major = dataset.label;
@@ -75,7 +68,9 @@ export function getMajorData(receiving, sending, year) {
     majorData.push({ major, key });
   });
 
-  return alphaSort(majorData, "major");
-}
+  majorData = alphaSort(majorData, "major");
 
-*/
+  res.json(majorData);
+});
+
+module.exports = router;
