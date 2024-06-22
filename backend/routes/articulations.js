@@ -66,6 +66,32 @@ router.get("/:year/:sending/:receiving/:key/lower-divs", async (req, res) => {
   // handle series (use irvine cs reqs as the url?)
 });
 
+router.get("/:year/:sending/:receiving/:key/articulated", async (req, res) => {
+  const year = req.params.year;
+  const sending = req.params.sending;
+  const receiving = req.params.receiving;
+  const key = req.params.key;
+
+  const articulationData = await getArticulationData(
+    year,
+    sending,
+    receiving,
+    key
+  );
+
+  // to continue, paste raw templateAssets into https://jsonviewer.stack.hu/
+
+  const availableArticulations = deNest(articulationData.articulations);
+
+  // let classList = [];
+
+  // classList = alphaSort(classList, "prefix");
+
+  res.json(availableArticulations);
+
+  // handle series (use irvine cs reqs as the url?)
+});
+
 async function getArticulationData(year, sending, receiving, key) {
   const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
 
