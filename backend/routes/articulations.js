@@ -1,42 +1,55 @@
 /* eslint-disable no-undef */
+
 const express = require("express");
+const { getJson, deNest, alphaSort } = require("../utilities.js");
 
 const router = express.Router();
 
-router.get("/:year/:sending/:receiving/:key", (req, res) => {
-  res.send("Will send JSON from getArticulationData()");
+// router below is for testing purposes
+router.get("/:year/:sending/:receiving/:key", async (req, res) => {
+  const year = req.params.year;
+  const sending = req.params.sending;
+  const receiving = req.params.receiving;
+  const key = req.params.key;
+
+  const articulationData = await getArticulationData(
+    year,
+    sending,
+    receiving,
+    key
+  );
+
+  res.json(articulationData);
 });
 
-module.exports = router;
+router.get("/:year/:sending/:receiving/:key/lower-divs", async (req, res) => {
+  const year = req.params.year;
+  const sending = req.params.sending;
+  const receiving = req.params.receiving;
+  const key = req.params.key;
 
-/*
+  const articulationData = await getArticulationData(
+    year,
+    sending,
+    receiving,
+    key
+  );
 
-import { alphaSort, deNest, jsonFromServer } from "./utilities.js";
+  // to continue, paste raw templateAssets into https://jsonviewer.stack.hu/
 
-async function getArticulationData(year, sending, receiving, key) {
-  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-
-  const json = jsonFromServer(articulationPage);
-  const articulationData = Object.values(json)[0];
-
-  return articulationData;
-}
-
-function getLowerDivList(articulationData) {
-// to continue, paste raw templateAssets into https://jsonviewer.stack.hu/
   const lowerDivs = deNest(articulationData.templateAssets);
-  const classList = [];
+  let classList = [];
 
   lowerDivs.forEach((obj) => {
     if (obj.type === "RequirementGroup") {
-      const {sections} = obj;
+      const { sections } = obj;
       sections.forEach((section) => {
         section.rows.forEach((row) => {
           row.cells.forEach((cell) => {
             if (cell.course) {
-              const {course} = cell;
+              const { course } = cell;
 
-              const {prefix, courseNumber, courseTitle} = course;
+              const { prefix, courseNumber, courseTitle } = course;
 
               classList.push({ prefix, courseNumber, courseTitle });
             }
@@ -46,10 +59,29 @@ function getLowerDivList(articulationData) {
     }
   });
 
-  return alphaSort(classList, "prefix");;
+  classList = alphaSort(classList, "prefix");
+
+  res.json(classList);
 
   // handle series (use irvine cs reqs as the url?)
+});
+
+async function getArticulationData(year, sending, receiving, key) {
+  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+
+  const json = await getJson(articulationPage);
+  const articulationData = Object.values(json)[0];
+
+  return articulationData;
 }
+
+module.exports = router;
+
+// berkeley eecs major key: 9df99d8d-2540-4677-891f-a559d4801840
+
+// sending: 113, receiving: 79, year: 74
+
+/*
 
 export default async function organizeArticulations(articulationData) {
 // to continue, paste raw templateAssets into https://jsonviewer.stack.hu/
