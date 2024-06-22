@@ -9,3 +9,7 @@ router.get("/communityColleges", (req, res) => {
 router.get("/four-years", (req, res) => {
   res.send("Will send JSON from getSendingSchools()");
 });
+
+router.get("/major-data/:receiving/:sending/:year", (req, res) => {
+  res.send("Will send JSON from getMajorData()");
+});
