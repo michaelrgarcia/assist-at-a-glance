@@ -13,3 +13,6 @@ router.get("/four-years", (req, res) => {
 router.get("/major-data/:receiving/:sending/:year", (req, res) => {
   res.send("Will send JSON from getMajorData()");
 });
+
+// eslint-disable-next-line no-undef
+module.exports = router;
