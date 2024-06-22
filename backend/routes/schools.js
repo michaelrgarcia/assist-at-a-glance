@@ -1,4 +1,5 @@
-import express from "express";
+/* eslint-disable no-undef */
+const express = require("express");
 
 const router = express.Router();
 
@@ -14,5 +15,4 @@ router.get("/major-data/:receiving/:sending/:year", (req, res) => {
   res.send("Will send JSON from getMajorData()");
 });
 
-// eslint-disable-next-line no-undef
 module.exports = router;
