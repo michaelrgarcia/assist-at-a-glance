@@ -1,14 +1,52 @@
 /* eslint-disable no-undef */
+
 const express = require("express");
+const { getJson, alphaSort } = require("../utilities.js");
 
 const router = express.Router();
 
-router.get("/communityColleges", (req, res) => {
-  res.send("Will send JSON from getReceivingSchools()");
+router.get("/communityColleges", async (req, res) => {
+  const institutions = "https://assist.org/api/institutions";
+  const json = await getJson(institutions);
+  const schoolData = Object.values(json); // array
+
+  let schoolList = [];
+
+  schoolData.forEach((school) => {
+    if (school.isCommunityCollege) {
+      const nameList = school.names;
+      const { name } = nameList[nameList.length - 1];
+      const { id } = school;
+
+      schoolList.push({ name, id });
+    }
+  });
+
+  schoolList = alphaSort(schoolList, "name");
+
+  res.json(schoolList);
 });
 
-router.get("/four-years", (req, res) => {
-  res.send("Will send JSON from getSendingSchools()");
+router.get("/four-years", async (req, res) => {
+  const institutions = "https://assist.org/api/institutions";
+  const json = await getJson(institutions);
+  const schoolData = Object.values(json); // array
+
+  let schoolList = [];
+
+  schoolData.forEach((school) => {
+    if (!school.isCommunityCollege) {
+      const nameList = school.names;
+      const { name } = nameList[nameList.length - 1];
+      const { id } = school;
+
+      schoolList.push({ name, id });
+    }
+  });
+
+  schoolList = alphaSort(schoolList, "name");
+
+  res.json(schoolList);
 });
 
 router.get("/major-data/:receiving/:sending/:year", (req, res) => {
@@ -38,46 +76,6 @@ export function getMajorData(receiving, sending, year) {
   });
 
   return alphaSort(majorData, "major");
-}
-
-export async function getSendingSchools() {
-  const json = await fetch("http://localhost:80/schoolList", {mode: "cors"});
-  const schoolData = Object.values(json); // array
-
-  const schoolList = [];
-
-  schoolData.forEach((school) => {
-    if (school.isCommunityCollege) {
-      const nameList = school.names;
-      const { name } = nameList[nameList.length - 1];
-      const { id } = school;
-
-      schoolList.push({ name, id });
-    }
-  });
-
-  return alphaSort(schoolList, "name");
-}
-
-export function getReceivingSchools() {
-  const institutions = "https://assist.org/api/institutions";
-
-  const json = jsonFromServer(institutions);
-  const schoolData = Object.values(json); // array
-
-  const schoolList = [];
-
-  schoolData.forEach((school) => {
-    if (!school.isCommunityCollege) {
-      const nameList = school.names;
-      const { name } = nameList[nameList.length - 1];
-      const { id } = school;
-
-      schoolList.push({ name, id });
-    }
-  });
-
-  return alphaSort(schoolList, "name");
 }
 
 */
