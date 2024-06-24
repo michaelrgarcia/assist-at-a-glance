@@ -30,4 +30,10 @@ function deNest(data) {
   return processed;
 }
 
-module.exports = { getJson, alphaSort, deNest };
+function conjoin(array, conjunction) {
+  array.flatMap((value, index, array) =>
+    array.length - 1 !== index ? [value, conjunction] : value
+  );
+}
+
+module.exports = { getJson, alphaSort, deNest, conjoin };
