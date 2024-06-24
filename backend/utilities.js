@@ -31,7 +31,7 @@ function deNest(data) {
 }
 
 function conjoin(array, conjunction) {
-  array.flatMap((value, index, array) =>
+  return array.flatMap((value, index, array) =>
     array.length - 1 !== index ? [value, conjunction] : value
   );
 }
