@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 
 const express = require("express");
-const { getJson, alphaSort } = require("../utilities.js");
+const { getJson, alphaSort } = require("../public/utilities.js");
 
 const router = express.Router();
 
