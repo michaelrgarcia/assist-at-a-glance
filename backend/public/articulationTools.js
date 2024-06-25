@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 
-const { create } = require("lodash");
 const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
 
 async function getArticulationData(year, sending, receiving, key) {
