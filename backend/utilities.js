@@ -31,9 +31,17 @@ function deNest(data) {
 }
 
 function conjoin(array, conjunction) {
-  return array.flatMap((value, index, array) =>
-    array.length - 1 !== index ? [value, conjunction] : value
-  );
+  let result = [];
+
+  array.forEach((item, index) => {
+    result.push(item);
+
+    if (index < array.length - 1) {
+      result.push(conjunction);
+    }
+  });
+
+  return result;
 }
 
 module.exports = { getJson, alphaSort, deNest, conjoin };
