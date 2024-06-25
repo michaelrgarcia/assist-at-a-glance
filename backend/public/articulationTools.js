@@ -110,9 +110,4 @@ function createGroup(conjunction, groupCourses) {
 module.exports = {
   createArticulationList,
   getArticulationData,
-  getReceivingCourses,
-  getSendingCourses,
-  extractGroupConnector,
-  getCourse,
-  createGroup,
 };
