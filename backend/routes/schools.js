@@ -9,7 +9,7 @@ const {
 
 const router = express.Router();
 
-router.get("/communityColleges", async (req, res) => {
+router.get("/community-colleges", async (req, res) => {
   const communityColleges = await getCommunityColleges();
 
   res.json(communityColleges);
