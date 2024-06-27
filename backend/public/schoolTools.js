@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-const { getJson, alphaSort } = require("../public/utilities.js");
+const { getJson, alphaSort, deNest } = require("../public/utilities.js");
 
 async function getCommunityColleges() {
   const institutions = "https://assist.org/api/institutions";
@@ -66,4 +66,47 @@ async function getMajorData(receiving, sending, year) {
   return majorData;
 }
 
-module.exports = { getCommunityColleges, getFourYears, getMajorData };
+// for lowerDiv function
+//checks for articulation.type == "series"
+
+function seriesBreakdown(seriesObj) {
+  const seriesArray = Object.values;
+}
+
+async function getLowerDivs(articulationData) {
+  const lowerDivs = deNest(articulationData.templateAssets);
+  let classList = [];
+
+  lowerDivs.forEach((obj) => {
+    if (obj.type === "RequirementGroup") {
+      const { sections } = obj;
+      sections.forEach((section) => {
+        section.rows.forEach((row) => {
+          row.cells.forEach((cell) => {
+            if (cell.course) {
+              const { course } = cell;
+
+              const { prefix, courseNumber, courseTitle } = course;
+
+              classList.push({ prefix, courseNumber, courseTitle });
+            } else if (cell.series) {
+              // series function goes here. pass in the series obj
+            }
+          });
+        });
+      });
+    }
+  });
+
+  classList = alphaSort(classList, "prefix");
+
+  return classList;
+}
+
+module.exports = {
+  getCommunityColleges,
+  getFourYears,
+  getMajorData,
+  seriesBreakdown,
+  getLowerDivs,
+};
