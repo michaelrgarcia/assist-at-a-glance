@@ -4,9 +4,9 @@
 
 A tool that aims to alleviate the nuisance of scrolling through ASSIST.org agreements. At a glance, a student can see every class at a California Community College that satisfies their transfer or lower division requirements.
 
-## API Routes
+## API Routes (GET)
 
-All of the following JSON data comes from ASSIST.org. The routes below are all GET requests to the TransferView API.
+**All of the following JSON data comes from ASSIST.org.**
 
 Everything wrapped in braces {} is a parameter. How to get those parameters is denoted below.
 
