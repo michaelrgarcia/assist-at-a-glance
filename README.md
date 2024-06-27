@@ -16,21 +16,21 @@ Everything wrapped in braces {} is meant to be substituted for an acceptable par
 
 ### School Information
 
-1. https://classglance.onrender.com/schools/community-colleges [^1]
+1. https://classglance.onrender.com/schools/community-colleges
 
-2. https://classglance.onrender.com/schools/four-years [^2]
+   Sends the list of California Community Colleges available in the ASSIST.org API. The "id" property can be used for "sendingId" parameters. 
 
-3. https://classglance.onrender.com/schools/major-data/{receivingId}/{sendingId}/{academicYear} [^3]
+2. https://classglance.onrender.com/schools/four-years
 
-4. https://classglance.onrender.com/schools/{academicYear}/{sendingId}/{receivingId}/{key}/lower-divs [^4]
+   Sends the list of UC / CSU institutions available in the ASSIST.org API. The "id" property can be used for "receivingId" parameters.
 
-Sends the list of California Community Colleges available in the ASSIST.org API. The "id" property can be used for "sendingId" parameters. [^1]
+3. https://classglance.onrender.com/schools/major-data/{receivingId}/{sendingId}/{academicYear}
 
-Sends the list of UC / CSU institutions available in the ASSIST.org API. The "id" property can be used for "receivingId" parameters. [^2]
+   Sends a list of all available majors with transferable coursework from a UC / CSU. The "key" property can be used for "key" parameters. 
 
-Sends a list of all available majors with transferable coursework from a UC / CSU. The "key" property can be used for "key" parameters. [^3]
+4. https://classglance.onrender.com/schools/{academicYear}/{sendingId}/{receivingId}/{key}/lower-divs
 
-Creates a list of all lower division classes available for a certain major in the ASSIST.org API. [^4]
+   Creates a list of all lower division classes available for a certain major in the ASSIST.org API. 
 
 ### Articulation Information
 
