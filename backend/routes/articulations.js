@@ -12,6 +12,24 @@ const {
 
 const router = express.Router();
 
+router.get("/:year/:sending/:receiving/:key/raw", async (req, res) => {
+  const year = req.params.year;
+  const sending = req.params.sending;
+  const receiving = req.params.receiving;
+  const key = req.params.key;
+
+  const articulationData = await getArticulationData(
+    year,
+    sending,
+    receiving,
+    key
+  );
+
+  const lowerDivs = deNest(articulationData.templateAssets);
+
+  res.json(lowerDivs);
+});
+
 router.get("/:year/:sending/:receiving/:key", async (req, res) => {
   const year = req.params.year;
   const sending = req.params.sending;
