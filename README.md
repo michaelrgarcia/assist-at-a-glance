@@ -42,7 +42,7 @@ Everything wrapped in braces {} is a parameter. "74" is currently the only worki
 
    2. https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}
 
-      Creates a list of courses from the given California Community College that transfer to the given UC / CSU institution. Series of courses will be a feature relatively soon.
+      Creates a list of courses from the given California Community College that transfer to the given UC / CSU institution and the course equivalent. Series of courses will be a feature relatively soon.
    
 </details>
 
