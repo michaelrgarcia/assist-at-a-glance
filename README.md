@@ -28,7 +28,7 @@ Everything wrapped in braces {} is a parameter. "74" is currently the only worki
 
    4. https://classglance.onrender.com/schools/{academicYear}/{sendingId}/{receivingId}/{key}/lower-divs
 
-      Creates a list of all lower division classes available for a certain major in the ASSIST.org API.
+      Creates a list of all lower division classes available for the given major in the ASSIST.org API.
    
 </details>
 
