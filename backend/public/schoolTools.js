@@ -73,7 +73,7 @@ function seriesBreakdown(seriesObj) {
   const seriesArray = Object.values;
 }
 
-async function getLowerDivs(articulationData) {
+function getLowerDivs(articulationData) {
   const lowerDivs = deNest(articulationData.templateAssets);
   let classList = [];
 
