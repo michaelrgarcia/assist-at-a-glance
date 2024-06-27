@@ -8,9 +8,7 @@ A tool that aims to alleviate the nuisance of scrolling through ASSIST.org agree
 
 **All of the following JSON data comes from ASSIST.org.**
 
-Everything wrapped in braces {} is a parameter. How to get those parameters is denoted below.
-
-"74" is currently the only working option for the "academicYear" parameter.
+Everything wrapped in braces {} is a parameter. How to get those parameters is denoted below. "74" is currently the only working option for the "academicYear" parameter.
 
 <details>
    
