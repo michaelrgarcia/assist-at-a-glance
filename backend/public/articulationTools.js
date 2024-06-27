@@ -35,6 +35,7 @@ function getReceivingCourses(articulationObj) {
     return getCourse(courseObj);
   } else if (articulationObj.series) {
     // const seriesObj = articulationObj.series;
+    // series function goes here
   }
 }
 
@@ -68,10 +69,6 @@ function getSendingCourses(articulationObj) {
     return courseList;
   }
 }
-
-// for lowerDiv function
-//checks for articulation.type == "series"
-function seriesBreakdown() {}
 
 function extractGroupConnector(sendingArticulation) {
   const arr = sendingArticulation.courseGroupConjunctions;

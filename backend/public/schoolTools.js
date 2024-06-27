@@ -1,6 +1,11 @@
 /* eslint-disable no-undef */
 
-const { getJson, alphaSort, deNest } = require("../public/utilities.js");
+const {
+  getJson,
+  alphaSort,
+  deNest,
+  conjoin,
+} = require("../public/utilities.js");
 
 async function getCommunityColleges() {
   const institutions = "https://assist.org/api/institutions";
@@ -70,7 +75,21 @@ async function getMajorData(receiving, sending, year) {
 //checks for articulation.type == "series"
 
 function seriesBreakdown(seriesObj) {
-  const seriesArray = Object.values;
+  // check for attributes
+  const connector = seriesObj.conjunction;
+  let series = [];
+
+  if (seriesObj.courses) {
+    const coursesInSeries = seriesObj.courses;
+
+    coursesInSeries.forEach((course) => {
+      const { prefix, courseNumber, courseTitle } = course;
+
+      series.push({ prefix, courseNumber, courseTitle });
+    });
+
+    return conjoin(series, connector);
+  }
 }
 
 function getLowerDivs(articulationData) {
@@ -90,7 +109,9 @@ function getLowerDivs(articulationData) {
 
               classList.push({ prefix, courseNumber, courseTitle });
             } else if (cell.series) {
-              // series function goes here. pass in the series obj
+              const series = seriesBreakdown(cell.series);
+
+              classList.push([series]);
             }
           });
         });
