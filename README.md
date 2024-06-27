@@ -6,9 +6,9 @@ A tool that aims to alleviate the nuisance of scrolling through ASSIST.org agree
 
 ## API Routes (GET)
 
-**All of the following JSON data comes from ASSIST.org.**
-
 Everything wrapped in braces {} is a parameter. "74" is currently the only working option for the "academicYear" parameter.
+
+*All of the following JSON data comes from ASSIST.org.*
 
 <details>
    
