@@ -34,11 +34,11 @@ Everything wrapped in braces {} is meant to be substituted for an acceptable par
 
 ### Articulation Information
 
-> https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}/raw
+1. https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}/raw
 
-Test route. Allows one to see raw JSON data from an ASSIST.org agreement.
+   Test route. Allows one to see raw JSON data from an ASSIST.org agreement.
 
-> https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}
+2. https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}
 
-Creates a list of courses from the given California Community College that transfer to the given UC / CSU institution. Series of courses will be a feature relatively soon.
+   Creates a list of courses from the given California Community College that transfer to the given UC / CSU institution. Series of courses will be a feature relatively soon.
 
