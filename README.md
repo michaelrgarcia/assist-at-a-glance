@@ -10,7 +10,7 @@ All of the following JSON data comes from ASSIST.org.
 
 The routes below are all GET requests to the TransferView API.
 
-Everything wrapped in braces {} is meant to be substituted for an acceptable parameter. How to get those parameters is denoted below.
+Everything wrapped in braces {} is a parameter. How to get those parameters is denoted below.
 
 "74" is currently the only working option for the "academicYear" parameter.
 
