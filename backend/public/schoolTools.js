@@ -108,7 +108,7 @@ function getLowerDivs(articulationData) {
             } else if (cell.series) {
               const series = seriesBreakdown(cell.series);
 
-              classList.push([series]);
+              classList.push(series);
             }
           });
         });
