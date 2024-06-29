@@ -72,7 +72,6 @@ async function getMajorData(receiving, sending, year) {
 }
 
 function seriesBreakdown(seriesObj) {
-  // check for attributes
   const connector = seriesObj.conjunction;
   let series = [];
 
