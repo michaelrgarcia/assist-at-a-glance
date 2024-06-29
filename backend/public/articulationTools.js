@@ -22,8 +22,14 @@ function createArticulationList(articulationData) {
 
     const receiving = getReceivingCourses(articulationObj);
     const sending = getSendingCourses(articulationObj);
+    const groupAttributes = articulationObj.sendingArticulation.attributes;
 
-    articulationGroup.push({ receiving, sending });
+    if (groupAttributes.length >= 1) {
+      const info = getGroupAttributes(articulationObj.sendingArticulation);
+      articulationGroup.push({ receiving, sending, info });
+    } else {
+      articulationGroup.push({ receiving, sending });
+    }
   });
 
   return articulationGroup;
@@ -79,7 +85,6 @@ function getReceivingCourses(articulationObj) {
 
 function getSendingCourses(articulationObj) {
   const sendingArticulation = articulationObj.sendingArticulation;
-  const groupAttributes = getGroupAttributes(sendingArticulation);
   const items = sendingArticulation.items;
 
   if (!sendingArticulation.noArticulationReason) {
@@ -104,10 +109,6 @@ function getSendingCourses(articulationObj) {
         courseList.push(course);
       }
     });
-
-    if (groupAttributes.length >= 1) {
-      courseList.push({ groupAttributes });
-    }
 
     if (items.length > 1) {
       const groupConnector = extractGroupConnector(sendingArticulation);
