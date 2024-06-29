@@ -36,11 +36,7 @@ Everything wrapped in braces {} is a parameter. "74" is currently the only worki
    
    <summary>Articulation Information</summary>
    
-   1. https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}/raw
-
-      Test route. Allows one to see raw JSON data from an ASSIST.org agreement.
-
-   2. https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}
+   1. https://classglance.onrender.com/articulations/{academicYear}/{sendingId}/{receivingId}/{key}
 
       Returns a list including the California Community College course(s) that transfer to the given UC / CSU institution and the UC / CSU equivalent(s). 
 
