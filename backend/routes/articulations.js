@@ -4,31 +4,12 @@
 // year: 74, sending: 113, receiving: 79
 
 const express = require("express");
-const { deNest, alphaSort } = require("../public/utilities.js");
 const {
   getArticulationData,
   createArticulationList,
 } = require("../public/articulationTools.js");
 
 const router = express.Router();
-
-router.get("/:year/:sending/:receiving/:key/raw", async (req, res) => {
-  const year = req.params.year;
-  const sending = req.params.sending;
-  const receiving = req.params.receiving;
-  const key = req.params.key;
-
-  const articulationData = await getArticulationData(
-    year,
-    sending,
-    receiving,
-    key
-  );
-
-  const lowerDivs = deNest(articulationData.templateAssets);
-
-  res.json(lowerDivs);
-});
 
 router.get("/:year/:sending/:receiving/:key", async (req, res) => {
   const year = req.params.year;
