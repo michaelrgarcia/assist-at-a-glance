@@ -29,9 +29,23 @@ function createArticulationList(articulationData) {
   return articulationGroup;
 }
 
+function getGroupAttributes(sendingArticulation) {
+  const groupAttributes = sendingArticulation.attributes;
+  let attributes = [];
+
+  if (groupAttributes.length >= 1) {
+    groupAttributes.forEach((attribute) => {
+      const groupAttributes = attribute.content;
+      attributes.push(groupAttributes);
+    });
+  }
+
+  return attributes;
+}
+
 function getAttributes(courseObj) {
   const group = courseObj.items;
-  let attributesArray = [];
+  let attributes = [];
 
   group.forEach((course) => {
     if (course.attributes.length >= 1) {
@@ -39,16 +53,16 @@ function getAttributes(courseObj) {
 
       courseAttributes.forEach((attribute) => {
         if (courseAttributes && courseAttributes.length) {
-          const attributes = attribute.content;
-          attributesArray.push({ attributes });
+          const content = attribute.content;
+          attributes.push(content);
         }
       });
     }
   });
 
-  attributesArray = alphaSort(attributesArray, "content");
+  attributes = alphaSort(attributes, "content");
 
-  return attributesArray;
+  return attributes;
 }
 
 function getReceivingCourses(articulationObj) {
@@ -65,6 +79,7 @@ function getReceivingCourses(articulationObj) {
 
 function getSendingCourses(articulationObj) {
   const sendingArticulation = articulationObj.sendingArticulation;
+  const groupAttributes = getGroupAttributes(sendingArticulation);
   const items = sendingArticulation.items;
 
   if (!sendingArticulation.noArticulationReason) {
@@ -79,7 +94,7 @@ function getSendingCourses(articulationObj) {
         let courseGroup = createGroup(connector, courses);
 
         if (attributes.length >= 1) {
-          courseGroup.push(attributes);
+          courseGroup.push({ attributes });
         }
 
         courseList.push(courseGroup);
@@ -89,6 +104,10 @@ function getSendingCourses(articulationObj) {
         courseList.push(course);
       }
     });
+
+    if (groupAttributes.length >= 1) {
+      courseList.push({ groupAttributes });
+    }
 
     if (items.length > 1) {
       const groupConnector = extractGroupConnector(sendingArticulation);
