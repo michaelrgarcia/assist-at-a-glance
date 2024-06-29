@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 
+const { seriesBreakdown } = require("./schoolTools.js");
 const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
 
 async function getArticulationData(year, sending, receiving, key) {
@@ -34,13 +35,13 @@ function getReceivingCourses(articulationObj) {
 
     return getCourse(courseObj);
   } else if (articulationObj.series) {
-    // const seriesObj = articulationObj.series;
-    // series function goes here
+    const seriesObj = articulationObj.series;
+
+    return seriesBreakdown(seriesObj);
   }
 }
 
 function getSendingCourses(articulationObj) {
-  //handle series...
   const sendingArticulation = articulationObj.sendingArticulation;
   const items = sendingArticulation.items;
 
