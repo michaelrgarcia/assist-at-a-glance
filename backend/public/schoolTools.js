@@ -71,9 +71,6 @@ async function getMajorData(receiving, sending, year) {
   return majorData;
 }
 
-// for lowerDiv function
-//checks for articulation.type == "series"
-
 function seriesBreakdown(seriesObj) {
   // check for attributes
   const connector = seriesObj.conjunction;
