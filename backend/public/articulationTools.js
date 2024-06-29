@@ -29,6 +29,28 @@ function createArticulationList(articulationData) {
   return articulationGroup;
 }
 
+function getAttributes(courseObj) {
+  const group = courseObj.items;
+  let attributesArray = [];
+
+  group.forEach((course) => {
+    if (course.attributes.length >= 1) {
+      const courseAttributes = course.attributes;
+
+      courseAttributes.forEach((attribute) => {
+        if (courseAttributes && courseAttributes.length) {
+          const attributes = attribute.content;
+          attributesArray.push({ attributes });
+        }
+      });
+    }
+  });
+
+  attributesArray = alphaSort(attributesArray, "content");
+
+  return attributesArray;
+}
+
 function getReceivingCourses(articulationObj) {
   if (articulationObj.course) {
     const courseObj = articulationObj.course;
@@ -45,29 +67,40 @@ function getSendingCourses(articulationObj) {
   const sendingArticulation = articulationObj.sendingArticulation;
   const items = sendingArticulation.items;
 
-  let courseList = [];
+  if (!sendingArticulation.noArticulationReason) {
+    let courseList = [];
 
-  items.forEach((courseObj) => {
-    const courses = courseObj.items;
+    items.forEach((courseObj) => {
+      const attributes = getAttributes(courseObj);
+      const courses = courseObj.items;
 
-    if (courses.length > 1) {
-      const connector = courseObj.courseConjunction;
-      let courseGroup = createGroup(connector, courses);
+      if (courses.length > 1) {
+        const connector = courseObj.courseConjunction;
+        let courseGroup = createGroup(connector, courses);
 
-      courseList.push(courseGroup);
+        if (attributes.length >= 1) {
+          courseGroup.push(attributes);
+        }
+
+        courseList.push(courseGroup);
+      } else {
+        const course = getCourse(courses[0]);
+
+        courseList.push(course);
+      }
+    });
+
+    if (items.length > 1) {
+      const groupConnector = extractGroupConnector(sendingArticulation);
+
+      courseList = conjoin(courseList, groupConnector);
+
+      return courseList;
     } else {
-      const course = getCourse(courses[0]);
-
-      courseList.push(course);
+      return courseList;
     }
-  });
-
-  if (items.length > 1) {
-    const groupConnector = extractGroupConnector(sendingArticulation);
-
-    return conjoin(courseList, groupConnector);
   } else {
-    return courseList;
+    return sendingArticulation.noArticulationReason;
   }
 }
 
@@ -79,16 +112,15 @@ function extractGroupConnector(sendingArticulation) {
 }
 
 function getCourse(courseObj) {
-  //check for attributes
   const { prefix, courseNumber, courseTitle } = courseObj;
 
   return { prefix, courseNumber, courseTitle };
 }
 
 function createGroup(conjunction, groupCourses) {
-  let group = [];
   const connector = conjunction;
   const coursesInGroup = groupCourses;
+  let group = [];
 
   // may not need these...
   const pad1 = connector.padStart(connector.length + 1, " ");
