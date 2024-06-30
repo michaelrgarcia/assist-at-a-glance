@@ -2,7 +2,7 @@
 
 ## Description
 
-The backend for [TransferView](https://github.com/michaelrgarcia/transfer-view).
+The backend for [TransferVision](https://github.com/michaelrgarcia/transfer-view).
 
 ## API Routes (GET)
 
