@@ -29,6 +29,19 @@ async function getCommunityColleges() {
   return schoolList;
 }
 
+async function getCollegeName(sendingId) {
+  const communityColleges = await getCommunityColleges();
+  let collegeName;
+
+  communityColleges.forEach((college) => {
+    if (sendingId == college.id) {
+      collegeName = college.name;
+    }
+  });
+
+  return { collegeName };
+}
+
 async function getFourYears() {
   const institutions = "https://assist.org/api/institutions";
   const json = await getJson(institutions);
@@ -126,4 +139,5 @@ module.exports = {
   getMajorData,
   seriesBreakdown,
   getLowerDivs,
+  getCollegeName,
 };
