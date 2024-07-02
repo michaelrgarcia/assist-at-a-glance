@@ -22,53 +22,11 @@ function createArticulationList(articulationData) {
 
     const receiving = getReceivingCourses(articulationObj);
     const sending = getSendingCourses(articulationObj);
-    const groupAttributes = articulationObj.sendingArticulation.attributes;
 
-    if (groupAttributes.length >= 1) {
-      const info = getGroupAttributes(articulationObj.sendingArticulation);
-      articulationGroup.push({ receiving, sending, info });
-    } else {
-      articulationGroup.push({ receiving, sending });
-    }
+    articulationGroup.push({ receiving, sending });
   });
 
   return articulationGroup;
-}
-
-function getGroupAttributes(sendingArticulation) {
-  const groupAttributes = sendingArticulation.attributes;
-  let attributes = [];
-
-  if (groupAttributes.length >= 1) {
-    groupAttributes.forEach((attribute) => {
-      const groupAttributes = attribute.content;
-      attributes.push(groupAttributes);
-    });
-  }
-
-  return attributes;
-}
-
-function getAttributes(courseObj) {
-  const group = courseObj.items;
-  let attributes = [];
-
-  group.forEach((course) => {
-    if (course.attributes.length >= 1) {
-      const courseAttributes = course.attributes;
-
-      courseAttributes.forEach((attribute) => {
-        if (courseAttributes && courseAttributes.length) {
-          const content = attribute.content;
-          attributes.push(content);
-        }
-      });
-    }
-  });
-
-  attributes = alphaSort(attributes, "content");
-
-  return attributes;
 }
 
 function getReceivingCourses(articulationObj) {
@@ -91,16 +49,11 @@ function getSendingCourses(articulationObj) {
     let courseList = [];
 
     items.forEach((courseObj) => {
-      const attributes = getAttributes(courseObj);
       const courses = courseObj.items;
 
       if (courses.length > 1) {
         const connector = courseObj.courseConjunction;
         let courseGroup = createGroup(connector, courses);
-
-        if (attributes.length >= 1) {
-          courseGroup.push({ attributes });
-        }
 
         courseList.push(courseGroup);
       } else {
