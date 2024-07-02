@@ -23,12 +23,11 @@ router.get("/four-years", async (req, res) => {
   res.json(fourYears);
 });
 
-router.get("/major-data/:receiving/:sending/:year", async (req, res) => {
+router.get("/major-data/:receiving/:year", async (req, res) => {
   const receiving = req.params.receiving;
-  const sending = req.params.sending;
   const year = req.params.year;
 
-  const majorData = await getMajorData(receiving, sending, year);
+  const majorData = await getMajorData(receiving, year);
 
   res.json(majorData);
 });

@@ -64,7 +64,8 @@ async function getFourYears() {
   return schoolList;
 }
 
-async function getMajorData(receiving, sending, year) {
+async function getMajorData(receiving, year) {
+  const sending = 6; // placeholder CCC
   const majorKeysByUni = `https://assist.org/api/agreements?receivingInstitutionId=${receiving}&sendingInstitutionId=${sending}&academicYearId=${year}&categoryCode=major`;
   const json = await getJson(majorKeysByUni);
   const majors = Object.values(json); // array
