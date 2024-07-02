@@ -11,7 +11,7 @@ app.use("/schools", schoolRouter);
 app.use("/articulations", articulationRouter);
 
 app.get("/", (req, res) => {
-  res.send("welcome to the transferview api :)");
+  res.send("welcome to the transfervision api :)");
 });
 
 app.listen(port);
