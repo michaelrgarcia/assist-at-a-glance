@@ -3,8 +3,6 @@
 const { seriesBreakdown, getCollegeName } = require("./schoolTools.js");
 const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
 
-// going to refactor getArticulationData.....
-
 // parameters will come from the front end (will still use schoolTools functions)
 
 async function getArticulationData(articulationParams) {
@@ -17,7 +15,10 @@ async function getArticulationData(articulationParams) {
     const articulationData = Object.values(json)[0];
 
     const list = createArticulationList(articulationData);
-    list.push(collegeName);
+    if (list.length >= 2) {
+      list.push(collegeName);
+    }
+
     return list;
   });
 
