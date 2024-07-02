@@ -24,7 +24,7 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
     },
   ]);
 
-  res.json(articulationData);
+  res.status(200).json(articulationData);
 });
 
 module.exports = router;

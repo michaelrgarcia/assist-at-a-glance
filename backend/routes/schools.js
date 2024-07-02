@@ -14,13 +14,13 @@ const router = express.Router();
 router.get("/community-colleges", async (req, res) => {
   const communityColleges = await getCommunityColleges();
 
-  res.json(communityColleges);
+  res.status(200).json(communityColleges);
 });
 
 router.get("/four-years", async (req, res) => {
   const fourYears = await getFourYears();
 
-  res.json(fourYears);
+  res.status(200).json(fourYears);
 });
 
 router.get("/major-data/:receiving/:year", async (req, res) => {
@@ -29,7 +29,7 @@ router.get("/major-data/:receiving/:year", async (req, res) => {
 
   const majorData = await getMajorData(receiving, year);
 
-  res.json(majorData);
+  res.status(200).json(majorData);
 });
 
 router.get("/:year/:sending/:receiving/:key/lower-divs", async (req, res) => {
