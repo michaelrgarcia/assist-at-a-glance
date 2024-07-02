@@ -3,13 +3,24 @@
 const { seriesBreakdown } = require("./schoolTools.js");
 const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
 
-async function getArticulationData(year, sending, receiving, key) {
-  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+// going to refactor getArticulationData.....
 
-  const json = await getJson(articulationPage);
-  const articulationData = Object.values(json)[0];
+// parameters will come from the front end (will still use schoolTools functions)
 
-  return articulationData;
+async function getArticulationData(articulationParams) {
+  const articulationPromises = articulationParams.map(async (request) => {
+    const { year, sending, receiving, key } = request;
+    const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+
+    const json = await getJson(articulationPage);
+    const articulationData = Object.values(json)[0];
+
+    return createArticulationList(articulationData);
+  });
+
+  const articulationDataList = Promise.all(articulationPromises);
+
+  return articulationDataList;
 }
 
 function createArticulationList(articulationData) {
