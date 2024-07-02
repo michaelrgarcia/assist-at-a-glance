@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-const { seriesBreakdown } = require("./schoolTools.js");
+const { seriesBreakdown, getCollegeName } = require("./schoolTools.js");
 const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
 
 // going to refactor getArticulationData.....
@@ -11,11 +11,14 @@ async function getArticulationData(articulationParams) {
   const articulationPromises = articulationParams.map(async (request) => {
     const { year, sending, receiving, key } = request;
     const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+    const collegeName = await getCollegeName(sending);
 
     const json = await getJson(articulationPage);
     const articulationData = Object.values(json)[0];
 
-    return createArticulationList(articulationData);
+    const list = createArticulationList(articulationData);
+    list.push(collegeName);
+    return list;
   });
 
   const articulationDataList = Promise.all(articulationPromises);
@@ -25,7 +28,6 @@ async function getArticulationData(articulationParams) {
 
 function createArticulationList(articulationData) {
   const availableArticulations = deNest(articulationData.articulations);
-
   let articulationGroup = [];
 
   availableArticulations.forEach((dataset) => {
