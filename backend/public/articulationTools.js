@@ -5,6 +5,15 @@ const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
 
 // parameters will come from the front end (will still use schoolTools functions)
 
+async function getRawArticulationData(year, sending, receiving, key) {
+  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+
+  const json = await getJson(articulationPage);
+  const articulationData = Object.values(json)[0];
+
+  return articulationData;
+}
+
 async function getArticulationData(articulationParams) {
   const articulationPromises = articulationParams.map(async (request) => {
     const { year, sending, receiving, key } = request;
@@ -127,4 +136,5 @@ function createGroup(conjunction, groupCourses) {
 module.exports = {
   createArticulationList,
   getArticulationData,
+  getRawArticulationData,
 };

@@ -7,7 +7,10 @@ const {
   getMajorData,
   getLowerDivs,
 } = require("../public/schoolTools.js");
-const { getArticulationData } = require("../public/articulationTools.js");
+const {
+  getArticulationData,
+  getRawArticulationData,
+} = require("../public/articulationTools.js");
 
 const router = express.Router();
 
@@ -38,14 +41,12 @@ router.get("/:year/:sending/:receiving/:key/lower-divs", async (req, res) => {
   const receiving = req.params.receiving;
   const key = req.params.key;
 
-  const articulationData = await getArticulationData([
-    {
-      year,
-      sending,
-      receiving,
-      key,
-    },
-  ]);
+  const articulationData = await getRawArticulationData(
+    year,
+    sending,
+    receiving,
+    key
+  );
 
   const classList = getLowerDivs(articulationData);
 
