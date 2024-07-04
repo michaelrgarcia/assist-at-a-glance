@@ -38,16 +38,16 @@ router.get("/:year/:sending/:receiving/:key/lower-divs", async (req, res) => {
   const receiving = req.params.receiving;
   const key = req.params.key;
 
-  const articulationData = await getArticulationData(
+  const articulationData = await getArticulationData({
     year,
     sending,
     receiving,
-    key
-  );
+    key,
+  });
 
   const classList = getLowerDivs(articulationData);
 
-  res.json(classList);
+  res.status(200).json(classList);
 });
 
 module.exports = router;
