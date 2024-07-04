@@ -128,7 +128,7 @@ function createGroup(conjunction, groupCourses) {
     group.push(course);
   });
 
-  group = alphaSort(group, "courseNumber");
+  group = alphaSort(group, ["courseNumber"]);
 
   return conjoin(group, pad2);
 }

@@ -24,7 +24,7 @@ async function getCommunityColleges() {
     }
   });
 
-  schoolList = alphaSort(schoolList, "name");
+  schoolList = alphaSort(schoolList, ["name"]);
 
   return schoolList;
 }
@@ -59,7 +59,7 @@ async function getFourYears() {
     }
   });
 
-  schoolList = alphaSort(schoolList, "name");
+  schoolList = alphaSort(schoolList, ["name"]);
 
   return schoolList;
 }
@@ -80,7 +80,7 @@ async function getMajorData(receiving, year) {
     majorData.push({ major, key });
   });
 
-  majorData = alphaSort(majorData, "major");
+  majorData = alphaSort(majorData, ["major"]);
 
   return majorData;
 }
@@ -129,7 +129,7 @@ function getLowerDivs(articulationData) {
     }
   });
 
-  classList = alphaSort(classList, "prefix");
+  classList = alphaSort(classList, ["prefix", "courseNumber"]);
 
   return classList;
 }

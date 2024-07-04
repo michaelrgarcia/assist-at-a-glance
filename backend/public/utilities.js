@@ -16,9 +16,9 @@ async function getJson(link) {
   return parsedPre;
 }
 
-function alphaSort(array, str) {
+function alphaSort(array, array2) {
   let arr = array;
-  arr = _.orderBy(arr, [str], ["asc"]);
+  arr = _.orderBy(arr, array2, ["asc"]);
 
   return arr;
 }

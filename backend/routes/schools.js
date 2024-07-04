@@ -7,10 +7,7 @@ const {
   getMajorData,
   getLowerDivs,
 } = require("../public/schoolTools.js");
-const {
-  getArticulationData,
-  getRawArticulationData,
-} = require("../public/articulationTools.js");
+const { getRawArticulationData } = require("../public/articulationTools.js");
 
 const router = express.Router();
 
