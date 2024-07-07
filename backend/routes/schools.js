@@ -38,16 +38,20 @@ router.get("/:year/:sending/:receiving/:key/lower-divs", async (req, res) => {
   const receiving = req.params.receiving;
   const key = req.params.key;
 
-  const articulationData = await getRawArticulationData(
-    year,
-    sending,
-    receiving,
-    key
-  );
+  try {
+    const articulationData = await getRawArticulationData(
+      year,
+      sending,
+      receiving,
+      key
+    );
 
-  const classList = getLowerDivs(articulationData);
+    const classList = getLowerDivs(articulationData);
 
-  res.status(200).json(classList);
+    res.status(200).json(classList);
+  } catch (error) {
+    res.send(`Error getting lower divs: ${error}`);
+  }
 });
 
 router.get("/:year/:sending/:receiving/:key/raw", async (req, res) => {
@@ -63,7 +67,7 @@ router.get("/:year/:sending/:receiving/:key/raw", async (req, res) => {
     key
   );
 
-  res.status(200).json(articulationData);
+  res.status(200).json(articulationData.templateAssets);
 });
 
 module.exports = router;
