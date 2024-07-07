@@ -110,21 +110,25 @@ function getLowerDivs(articulationData) {
     if (obj.type === "RequirementGroup") {
       const { sections } = obj;
       sections.forEach((section) => {
-        section.rows.forEach((row) => {
-          row.cells.forEach((cell) => {
-            if (cell.course) {
-              const { course } = cell;
+        if (section.rows) {
+          section.rows.forEach((row) => {
+            if (row.cells) {
+              row.cells.forEach((cell) => {
+                if (cell.course) {
+                  const { course } = cell;
 
-              const { prefix, courseNumber, courseTitle } = course;
+                  const { prefix, courseNumber, courseTitle } = course;
 
-              classList.push({ prefix, courseNumber, courseTitle });
-            } else if (cell.series) {
-              const series = seriesBreakdown(cell.series);
+                  classList.push({ prefix, courseNumber, courseTitle });
+                } else if (cell.series) {
+                  const series = seriesBreakdown(cell.series);
 
-              classList.push(series);
+                  classList.push(series);
+                }
+              });
             }
           });
-        });
+        }
       });
     }
   });
