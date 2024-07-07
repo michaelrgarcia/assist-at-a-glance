@@ -8,7 +8,6 @@ const {
   getLowerDivs,
 } = require("../public/schoolTools.js");
 const { getRawArticulationData } = require("../public/articulationTools.js");
-const { deNest } = require("../public/utilities.js");
 
 const router = express.Router();
 
