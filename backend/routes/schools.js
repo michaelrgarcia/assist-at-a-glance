@@ -8,6 +8,7 @@ const {
   getLowerDivs,
 } = require("../public/schoolTools.js");
 const { getRawArticulationData } = require("../public/articulationTools.js");
+const { deNest } = require("../public/utilities.js");
 
 const router = express.Router();
 
@@ -67,7 +68,7 @@ router.get("/:year/:sending/:receiving/:key/raw", async (req, res) => {
     key
   );
 
-  res.status(200).json(articulationData.templateAssets);
+  res.status(200).json(deNest(articulationData.templateAssets));
 });
 
 module.exports = router;
