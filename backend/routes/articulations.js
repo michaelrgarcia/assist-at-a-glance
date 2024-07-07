@@ -31,4 +31,8 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
   res.status(200).json(articulationData);
 });
 
+router.post("/articulation-params", async (req, res) => {
+  console.log(req.body);
+});
+
 module.exports = router;
