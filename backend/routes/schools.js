@@ -50,4 +50,20 @@ router.get("/:year/:sending/:receiving/:key/lower-divs", async (req, res) => {
   res.status(200).json(classList);
 });
 
+router.get("/:year/:sending/:receiving/:key/raw", async (req, res) => {
+  const year = req.params.year;
+  const sending = req.params.sending;
+  const receiving = req.params.receiving;
+  const key = req.params.key;
+
+  const articulationData = await getRawArticulationData(
+    year,
+    sending,
+    receiving,
+    key
+  );
+
+  res.status(200).json(articulationData);
+});
+
 module.exports = router;
