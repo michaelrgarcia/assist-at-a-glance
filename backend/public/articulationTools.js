@@ -28,50 +28,71 @@ async function getArticulationParams(receivingId, majorKey) {
 
   communityColleges.forEach((college) => {
     if (college.id) {
-      const { id } = college;
-      articulationParams.push({ year, id, receiving, key });
+      const sending = college.id;
+      articulationParams.push({ year, sending, receiving, key });
     }
   });
 
   return articulationParams;
 }
 
-async function getArticulationData(articulationParams) {
-  const articulationPromises = articulationParams.map(async (request) => {
+async function processChunk(chunk) {
+  const chunkPromises = chunk.map(async (request) => {
     const { year, sending, receiving, key } = request;
+
     const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
     const collegeName = await getCollegeName(sending);
 
     const json = await getJson(articulationPage);
+
     const articulationData = Object.values(json)[0];
 
-    const list = createArticulationList(articulationData);
-    if (list.length >= 2) {
-      list.push(collegeName);
-    }
+    if (articulationData) {
+      const list = createArticulationList(articulationData);
 
-    return list;
+      if (list.length >= 2) {
+        list.push(collegeName);
+      }
+
+      return list;
+    }
   });
 
-  const articulationDataList = Promise.all(articulationPromises);
+  return Promise.all(chunkPromises);
+}
 
-  return articulationDataList;
+async function getArticulationData(articulationParams, chunkSize = 10) {
+  const chunks = [];
+
+  for (let i = 0; i < articulationParams.length; i += chunkSize) {
+    chunks.push(articulationParams.slice(i, i + chunkSize));
+  }
+
+  let results = [];
+  for (const chunk of chunks) {
+    const chunkResults = await processChunk(chunk);
+    results = results.concat(chunkResults);
+  }
+
+  return results;
 }
 
 function createArticulationList(articulationData) {
-  const availableArticulations = deNest(articulationData.articulations);
-  let articulationGroup = [];
+  if (articulationData.articulations) {
+    const availableArticulations = deNest(articulationData.articulations);
+    let articulationGroup = [];
 
-  availableArticulations.forEach((dataset) => {
-    const articulationObj = dataset.articulation;
+    availableArticulations.forEach((dataset) => {
+      const articulationObj = dataset.articulation;
 
-    const receiving = getReceivingCourses(articulationObj);
-    const sending = getSendingCourses(articulationObj);
+      const receiving = getReceivingCourses(articulationObj);
+      const sending = getSendingCourses(articulationObj);
 
-    articulationGroup.push({ receiving, sending });
-  });
+      articulationGroup.push({ receiving, sending });
+    });
 
-  return articulationGroup;
+    return articulationGroup;
+  }
 }
 
 function getReceivingCourses(articulationObj) {
