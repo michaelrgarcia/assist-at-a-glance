@@ -1,6 +1,10 @@
 /* eslint-disable no-undef */
 
-const { seriesBreakdown, getCollegeName } = require("./schoolTools.js");
+const {
+  seriesBreakdown,
+  getCollegeName,
+  getCommunityColleges,
+} = require("./schoolTools.js");
 const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
 
 // parameters will come from the front end (will still use schoolTools functions)
@@ -12,6 +16,24 @@ async function getRawArticulationData(year, sending, receiving, key) {
   const articulationData = Object.values(json)[0];
 
   return articulationData;
+}
+
+async function getArticulationParams(receivingId, majorKey) {
+  const articulationParams = [];
+  const communityColleges = await getCommunityColleges();
+
+  const year = 74;
+  const receiving = receivingId;
+  const key = majorKey;
+
+  communityColleges.forEach((college) => {
+    if (college.id) {
+      const { id } = college;
+      articulationParams.push({ year, id, receiving, key });
+    }
+  });
+
+  return articulationParams;
 }
 
 async function getArticulationData(articulationParams) {
@@ -137,4 +159,5 @@ module.exports = {
   createArticulationList,
   getArticulationData,
   getRawArticulationData,
+  getArticulationParams,
 };
