@@ -4,14 +4,10 @@
 // year: 74, sending: 113, receiving: 79
 
 const express = require("express");
-const bodyParser = require("body-parser");
 
 const { getArticulationData } = require("../public/articulationTools.js");
 
 const router = express.Router();
-
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
 
 // below function will be replaced by post route
 router.get("/:year/:sending/:receiving/:key", async (req, res) => {
