@@ -109,37 +109,39 @@ function getReceivingCourses(articulationObj) {
 
 function getSendingCourses(articulationObj) {
   const sendingArticulation = articulationObj.sendingArticulation;
-  const items = sendingArticulation.items;
+  if (sendingArticulation.items) {
+    const items = sendingArticulation.items;
 
-  if (!sendingArticulation.noArticulationReason) {
-    let courseList = [];
+    if (!sendingArticulation.noArticulationReason) {
+      let courseList = [];
 
-    items.forEach((courseObj) => {
-      const courses = courseObj.items;
+      items.forEach((courseObj) => {
+        const courses = courseObj.items;
 
-      if (courses.length > 1) {
-        const connector = courseObj.courseConjunction;
-        let courseGroup = createGroup(connector, courses);
+        if (courses.length > 1) {
+          const connector = courseObj.courseConjunction;
+          let courseGroup = createGroup(connector, courses);
 
-        courseList.push(courseGroup);
+          courseList.push(courseGroup);
+        } else {
+          const course = getCourse(courses[0]);
+
+          courseList.push(course);
+        }
+      });
+
+      if (items.length > 1) {
+        const groupConnector = extractGroupConnector(sendingArticulation);
+
+        courseList = conjoin(courseList, groupConnector);
+
+        return courseList;
       } else {
-        const course = getCourse(courses[0]);
-
-        courseList.push(course);
+        return courseList;
       }
-    });
-
-    if (items.length > 1) {
-      const groupConnector = extractGroupConnector(sendingArticulation);
-
-      courseList = conjoin(courseList, groupConnector);
-
-      return courseList;
     } else {
-      return courseList;
+      return sendingArticulation.noArticulationReason;
     }
-  } else {
-    return sendingArticulation.noArticulationReason;
   }
 }
 
