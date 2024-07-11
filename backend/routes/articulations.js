@@ -4,10 +4,16 @@
 // year: 74, sending: 113, receiving: 79
 
 const express = require("express");
+const bodyParser = require("body-parser");
+
 const { getArticulationData } = require("../public/articulationTools.js");
 
 const router = express.Router();
 
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
+
+// below function will be replaced by post route
 router.get("/:year/:sending/:receiving/:key", async (req, res) => {
   const year = req.params.year;
   const sending = req.params.sending;
@@ -33,7 +39,9 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
 
 router.post("/articulation-params", async (req, res) => {
   try {
-    res.status(200).json(req.body.parameters);
+    const parameters = req.body.parameters;
+
+    res.status(200).json(parameters);
   } catch (error) {
     res.send(`Error: no articulation params (${error})`);
   }
