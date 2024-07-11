@@ -25,9 +25,12 @@ function alphaSort(array, array2) {
 
 function deNest(data) {
   const json = JSON.parse(data);
-  const processed = Object.values(json);
 
-  return processed;
+  if (json) {
+    const processed = Object.values(json);
+
+    return processed;
+  }
 }
 
 function conjoin(array, conjunction) {
