@@ -32,7 +32,12 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
 });
 
 router.post("/articulation-params", async (req, res) => {
-  res.status(200).json(req.body);
+  try {
+    res.status(200).json(req.body.parameters);
+  } catch (error) {
+    res.send(`Error: no articulation params (${error})`);
+  }
+
   //execute getArticulationData with the params from the req
 });
 
