@@ -32,7 +32,7 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
 });
 
 router.post("/articulation-params", async (req, res) => {
-  console.log(req.body);
+  res.status(200).json(req.body);
 });
 
 module.exports = router;
