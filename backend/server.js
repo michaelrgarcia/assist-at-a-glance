@@ -3,11 +3,11 @@
 const express = require("express");
 const cors = require("cors");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 const app = express();
 const port = 10000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const schoolRouter = require("./routes/schools.js");
 const articulationRouter = require("./routes/articulations.js");
