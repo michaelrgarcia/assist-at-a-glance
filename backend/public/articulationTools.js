@@ -61,7 +61,7 @@ async function processChunk(chunk) {
   return Promise.all(chunkPromises);
 }
 
-async function getArticulationData(articulationParams, chunkSize = 10) {
+async function getArticulationData(articulationParams, chunkSize = 5) {
   const chunks = [];
 
   for (let i = 0; i < articulationParams.length; i += chunkSize) {
