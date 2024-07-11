@@ -5,46 +5,28 @@
 
 const express = require("express");
 
-const { getArticulationData } = require("../public/articulationTools.js");
+const {
+  getArticulationParams,
+  getArticulationData,
+} = require("../public/articulationTools.js");
 
 const router = express.Router();
 
-// below function will be replaced by post route
-router.get("/:year/:sending/:receiving/:key", async (req, res) => {
-  const year = req.params.year;
-  const sending = req.params.sending;
+// consider making this a POST
+// REALLY dont want ppl spamming this one
+// receiving and major key easily accessible from front end form POST
+
+// consider caching (maybe mongodb?)
+
+router.get("/:receiving/:key/all-articulations", async (req, res) => {
   const receiving = req.params.receiving;
   const key = req.params.key;
 
-  // below func. takes in arrays
+  const articulationParams = await getArticulationParams(receiving, key);
+  const baseArticulations = await getArticulationData(articulationParams);
 
-  // append objects to the array that contain year, sending, receiving, key
-
-  const articulationData = await getArticulationData([
-    { year, sending, receiving, key },
-    {
-      year: "74",
-      sending: "6",
-      receiving: "120",
-      key: "834d7251-be14-4ba7-bb22-d232d96395c6",
-    },
-  ]);
-
-  res.status(200).json(articulationData);
-});
-
-router.post("/articulation-params", async (req, res) => {
-  try {
-    const parameters = req.body.parameters;
-
-    console.log(parameters);
-
-    // res.status(200).json(parameters);
-  } catch (error) {
-    res.send(`Error: no articulation params (${error})`);
-  }
-
-  //execute getArticulationData with the params from the req
+  res.status(200).json(baseArticulations);
+  // this data will be broken down on front end (need class obj)
 });
 
 module.exports = router;
