@@ -10,8 +10,8 @@ const { getArticulationData } = require("../public/articulationTools.js");
 
 const router = express.Router();
 
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
 
 // below function will be replaced by post route
 router.get("/:year/:sending/:receiving/:key", async (req, res) => {
