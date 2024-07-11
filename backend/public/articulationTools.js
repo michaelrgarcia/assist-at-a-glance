@@ -149,7 +149,9 @@ function extractGroupConnector(sendingArticulation) {
   const arr = sendingArticulation.courseGroupConjunctions;
   const lastItem = arr[arr.length - 1];
 
-  return lastItem.groupConjunction;
+  if (lastItem.groupConjunction) {
+    return lastItem.groupConjunction;
+  }
 }
 
 function getCourse(courseObj) {
