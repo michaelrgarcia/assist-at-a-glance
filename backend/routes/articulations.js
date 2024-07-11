@@ -41,7 +41,9 @@ router.post("/articulation-params", async (req, res) => {
   try {
     const parameters = req.body.parameters;
 
-    res.status(200).json(parameters);
+    console.log(parameters);
+
+    // res.status(200).json(parameters);
   } catch (error) {
     res.send(`Error: no articulation params (${error})`);
   }
