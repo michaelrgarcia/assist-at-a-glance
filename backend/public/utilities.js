@@ -3,15 +3,17 @@
 const _ = require("lodash");
 const puppeteer = require("puppeteer");
 
+const browser = await puppeteer.launch({ headless: true });
+
 async function getJson(link) {
-  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
+
   await page.goto(link);
 
   const pre = await page.$eval("pre", (element) => element.textContent);
   const parsedPre = JSON.parse(pre);
 
-  await browser.close();
+  await page.close();
 
   return parsedPre;
 }
