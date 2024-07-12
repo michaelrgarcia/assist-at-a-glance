@@ -27,11 +27,14 @@ async function getArticulationData(params) {
   const articulationData = Object.values(json)[0];
 
   const list = createArticulationList(articulationData);
-  if (list.length >= 2) {
-    list.push(collegeName);
-  }
 
-  return list;
+  if (list) {
+    if (list.length >= 2) {
+      list.push(collegeName);
+    }
+
+    return list;
+  }
 }
 
 function createArticulationList(articulationData) {
