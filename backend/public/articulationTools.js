@@ -42,7 +42,7 @@ async function processChunk(chunk) {
 
     const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
     const collegeName = await getCollegeName(sending);
-    console.log(`Processing articulations for ${collegeName}...`);
+    console.log(`Processing articulations for ${collegeName.collegeName}...`);
 
     const json = await getJson(articulationPage);
 
@@ -148,11 +148,16 @@ function getSendingCourses(articulationObj) {
 }
 
 function extractGroupConnector(sendingArticulation) {
-  const arr = sendingArticulation.courseGroupConjunctions;
-  const lastItem = arr[arr.length - 1];
+  if (sendingArticulation.courseGroupConjunctions) {
+    const arr = sendingArticulation.courseGroupConjunctions;
 
-  if (lastItem.groupConjunction) {
-    return lastItem.groupConjunction;
+    if (lastItem) {
+      const lastItem = arr[arr.length - 1];
+
+      if (lastItem.groupConjunction) {
+        return lastItem.groupConjunction;
+      }
+    }
   }
 }
 
