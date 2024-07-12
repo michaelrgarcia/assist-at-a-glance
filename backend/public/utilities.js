@@ -6,8 +6,7 @@ const puppeteer = require("puppeteer");
 async function getJson(link) {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
-
-  page.goto(link);
+  await page.goto(link);
 
   const pre = await page.$eval("pre", (element) => element.textContent);
   const parsedPre = JSON.parse(pre);
