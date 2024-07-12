@@ -145,5 +145,4 @@ module.exports = {
   createArticulationList,
   getArticulationData,
   getRawArticulationData,
-  getArticulationParams,
 };
