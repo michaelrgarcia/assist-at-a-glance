@@ -3,9 +3,7 @@
 const _ = require("lodash");
 const puppeteer = require("puppeteer");
 
-const browser = (async function () {
-  return await puppeteer.launch({ headless: true });
-})();
+const browser = puppeteer.launch({ headless: true });
 
 async function getJson(link) {
   const page = await browser.newPage();
