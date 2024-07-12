@@ -36,16 +36,27 @@ async function getArticulationParams(receivingId, majorKey) {
   return articulationParams;
 }
 
-async function processRequest(request, collegeNames) {
+async function processRequest(request) {
   const { year, sending, receiving, key } = request;
   const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-  const collegeName = collegeNames.get(sending);
+
+  const collegeNameCache = new Map();
+
+  async function getCachedCollegeName(sending) {
+    if (!collegeNameCache.has(sending)) {
+      collegeNameCache.set(sending, await getCollegeName(sending));
+    }
+
+    return collegeNameCache.get(sending);
+  }
 
   try {
     const json = await getJson(articulationPage);
     const articulationData = Object.values(json)[0];
 
     if (articulationData) {
+      const collegeName = await getCachedCollegeName(sending);
+
       console.log(`processing articulations for ${collegeName}...`);
       const list = createArticulationList(articulationData);
 
@@ -61,30 +72,19 @@ async function processRequest(request, collegeNames) {
 }
 
 async function getArticulationData(articulationParams, chunkSize = 3) {
-  const collegeNames = new Map();
-  const uniqueSendingCodes = [
-    ...new Set(articulationParams.map((param) => param.sending)),
-  ];
-  await Promise.all(
-    uniqueSendingCodes.map(async (code) => {
-      collegeNames.set(code, await getCollegeName(code));
-    })
-  );
-
   const results = [];
 
   for (let i = 0; i < articulationParams.length; i += chunkSize) {
     const chunk = articulationParams.slice(i, i + chunkSize);
-    const chunkResults = await Promise.all(
-      chunk.map(processRequest(chunk, collegeNames))
-    );
-    results.push(...chunkResults);
+    const chunkResults = await Promise.all(chunk.map(processRequest));
+    results.push(...chunkResults.filter((result) => result !== null));
 
     console.log("chunk finished");
   }
 
   console.log("all chunks finished");
-  return results.filter((result) => result !== null);
+
+  return results;
 }
 
 function createArticulationList(articulationData) {
