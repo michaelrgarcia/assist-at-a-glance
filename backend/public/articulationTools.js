@@ -18,67 +18,26 @@ async function getRawArticulationData(year, sending, receiving, key) {
   return articulationData;
 }
 
-async function getArticulationParams(receivingId, majorKey) {
-  const articulationParams = [];
-  const communityColleges = await getCommunityColleges();
+async function getArticulationData(articulationParams) {
+  const articulationPromises = articulationParams.map(async (request) => {
+    const { year, sending, receiving, key } = request;
+    const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+    const collegeName = await getCollegeName(sending);
 
-  const year = 74;
-  const receiving = receivingId;
-  const key = majorKey;
+    const json = await getJson(articulationPage);
+    const articulationData = Object.values(json)[0];
 
-  communityColleges.forEach((college) => {
-    if (college.id) {
-      const sending = college.id;
-      articulationParams.push({ year, sending, receiving, key });
+    const list = createArticulationList(articulationData);
+    if (list.length >= 2) {
+      list.push(collegeName);
     }
+
+    return list;
   });
 
-  return articulationParams;
-}
+  const articulationDataList = Promise.all(articulationPromises);
 
-async function processBatch(batch) {
-  try {
-    const batchPromises = batch.map(async (request) => {
-      const { year, sending, receiving, key } = request;
-      const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-      const collegeName = getCollegeName(sending);
-      const json = await getJson(articulationPage);
-
-      const articulationData = Object.values(json)[0];
-
-      if (articulationData) {
-        console.log(
-          `processing articulations for ${collegeName.collegeName}...`
-        );
-        const list = createArticulationList(articulationData);
-
-        if (list.length >= 2) {
-          list.push(await collegeName);
-          return list;
-        }
-      }
-    });
-
-    return await Promise.all(batchPromises);
-  } catch (error) {
-    console.error("Error processing batch:", error);
-  }
-  return null;
-}
-
-async function getArticulationData(articulationParams) {
-  const concurrencyLimit = 4;
-  const results = [];
-
-  for (let i = 0; i < articulationParams.length; i += concurrencyLimit) {
-    const batch = articulationParams.slice(i, i + concurrencyLimit);
-    const batchResults = await processBatch(batch);
-    results.push(...batchResults);
-
-    console.log("batch processed");
-  }
-
-  return results;
+  return articulationDataList;
 }
 
 function createArticulationList(articulationData) {
