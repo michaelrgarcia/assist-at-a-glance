@@ -4,29 +4,21 @@
 // year: 74, sending: 113, receiving: 79
 
 const express = require("express");
-
-const {
-  getArticulationParams,
-  getArticulationData,
-} = require("../public/articulationTools.js");
+const { getArticulationData } = require("../public/articulationTools.js");
 
 const router = express.Router();
 
-// consider making this a POST
-// REALLY dont want ppl spamming this one
-// receiving and major key easily accessible from front end form POST
-
-// consider caching (maybe mongodb?)
-
-router.get("/:receiving/:key/all-articulations", async (req, res) => {
+router.get("/:year/:sending/:receiving/:key", async (req, res) => {
+  const year = req.params.year;
+  const sending = req.params.sending;
   const receiving = req.params.receiving;
   const key = req.params.key;
 
-  const articulationParams = await getArticulationParams(receiving, key);
-  const baseArticulations = await getArticulationData(articulationParams);
+  const articulationData = await getArticulationData([
+    { year, sending, receiving, key },
+  ]);
 
-  res.status(200).json(baseArticulations);
-  // this data will be broken down on front end (need class obj)
+  res.status(200).json(articulationData);
 });
 
 module.exports = router;
