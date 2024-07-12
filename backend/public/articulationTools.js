@@ -35,20 +35,22 @@ async function getArticulationData(params) {
 }
 
 function createArticulationList(articulationData) {
-  if (articulationData.articulations) {
-    const availableArticulations = deNest(articulationData.articulations);
-    let articulationGroup = [];
+  if (articulationData) {
+    if (articulationData.articulations) {
+      const availableArticulations = deNest(articulationData.articulations);
+      let articulationGroup = [];
 
-    availableArticulations.forEach((dataset) => {
-      const articulationObj = dataset.articulation;
+      availableArticulations.forEach((dataset) => {
+        const articulationObj = dataset.articulation;
 
-      const receiving = getReceivingCourses(articulationObj);
-      const sending = getSendingCourses(articulationObj);
+        const receiving = getReceivingCourses(articulationObj);
+        const sending = getSendingCourses(articulationObj);
 
-      articulationGroup.push({ receiving, sending });
-    });
+        articulationGroup.push({ receiving, sending });
+      });
 
-    return articulationGroup;
+      return articulationGroup;
+    }
   }
 }
 
