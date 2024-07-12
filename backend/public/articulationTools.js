@@ -36,30 +36,30 @@ async function getArticulationParams(receivingId, majorKey) {
   return articulationParams;
 }
 
-async function batchPromises(batch) {
-  batch.map(async (request) => {
-    const { year, sending, receiving, key } = request;
-    const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-    const collegeName = getCollegeName(sending);
-    const json = await getJson(articulationPage);
-
-    const articulationData = Object.values(json)[0];
-
-    if (articulationData) {
-      console.log(`processing articulations for ${collegeName.collegeName}...`);
-      const list = createArticulationList(articulationData);
-
-      if (list.length >= 2) {
-        list.push(await collegeName);
-        return list;
-      }
-    }
-  });
-}
-
 async function processBatch(batch) {
   try {
-    return await Promise.all(batchPromises(batch));
+    const batchPromises = batch.map(async (request) => {
+      const { year, sending, receiving, key } = request;
+      const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+      const collegeName = getCollegeName(sending);
+      const json = await getJson(articulationPage);
+
+      const articulationData = Object.values(json)[0];
+
+      if (articulationData) {
+        console.log(
+          `processing articulations for ${collegeName.collegeName}...`
+        );
+        const list = createArticulationList(articulationData);
+
+        if (list.length >= 2) {
+          list.push(await collegeName);
+          return list;
+        }
+      }
+    });
+
+    return await Promise.all(batchPromises);
   } catch (error) {
     console.error("Error processing batch:", error);
   }
@@ -74,6 +74,8 @@ async function getArticulationData(articulationParams) {
     const batch = articulationParams.slice(i, i + concurrencyLimit);
     const batchResults = await processBatch(batch);
     results.push(...batchResults);
+
+    console.log("batch processed");
   }
 
   return results;
