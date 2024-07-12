@@ -71,7 +71,7 @@ async function processRequest(request) {
   return null;
 }
 
-async function getArticulationData(articulationParams, chunkSize = 3) {
+async function getArticulationData(articulationParams, chunkSize = 4) {
   const results = [];
 
   for (let i = 0; i < articulationParams.length; i += chunkSize) {
