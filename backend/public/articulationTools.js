@@ -150,10 +150,9 @@ function getSendingCourses(articulationObj) {
 function extractGroupConnector(sendingArticulation) {
   if (sendingArticulation.courseGroupConjunctions) {
     const arr = sendingArticulation.courseGroupConjunctions;
+    const lastItem = arr[arr.length - 1];
 
     if (lastItem) {
-      const lastItem = arr[arr.length - 1];
-
       if (lastItem.groupConjunction) {
         return lastItem.groupConjunction;
       }
