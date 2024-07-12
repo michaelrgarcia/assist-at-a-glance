@@ -18,26 +18,20 @@ async function getRawArticulationData(year, sending, receiving, key) {
   return articulationData;
 }
 
-async function getArticulationData(articulationParams) {
-  const articulationPromises = articulationParams.map(async (request) => {
-    const { year, sending, receiving, key } = request;
-    const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-    const collegeName = await getCollegeName(sending);
+async function getArticulationData(params) {
+  const { year, sending, receiving, key } = params;
+  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+  const collegeName = await getCollegeName(sending);
 
-    const json = await getJson(articulationPage);
-    const articulationData = Object.values(json)[0];
+  const json = await getJson(articulationPage);
+  const articulationData = Object.values(json)[0];
 
-    const list = createArticulationList(articulationData);
-    if (list.length >= 2) {
-      list.push(collegeName);
-    }
+  const list = createArticulationList(articulationData);
+  if (list.length >= 2) {
+    list.push(collegeName);
+  }
 
-    return list;
-  });
-
-  const articulationDataList = Promise.all(articulationPromises);
-
-  return articulationDataList;
+  return list;
 }
 
 function createArticulationList(articulationData) {
