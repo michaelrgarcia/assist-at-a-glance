@@ -39,16 +39,18 @@ async function getArticulationParams(receivingId, majorKey) {
 async function processRequest(request, collegeNames) {
   const { year, sending, receiving, key } = request;
   const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+  const collegeName = collegeNames.get(sending);
 
   try {
     const json = await getJson(articulationPage);
     const articulationData = Object.values(json)[0];
 
     if (articulationData) {
+      console.log(`processing articulations for ${collegeName}...`);
       const list = createArticulationList(articulationData);
 
       if (list.length >= 2) {
-        list.push(collegeNames.get(sending));
+        list.push(collegeName);
         return list;
       }
     }
@@ -77,8 +79,11 @@ async function getArticulationData(articulationParams, chunkSize = 3) {
       chunk.map(processRequest(chunk, collegeNames))
     );
     results.push(...chunkResults);
+
+    console.log("chunk finished");
   }
 
+  console.log("all chunks finished");
   return results.filter((result) => result !== null);
 }
 
