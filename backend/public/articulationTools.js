@@ -51,17 +51,19 @@ async function processRequest(request) {
   }
 
   try {
-    const json = await getJson(articulationPage);
+    const [json, collegeName] = await Promise.all([
+      getJson(articulationPage),
+      getCachedCollegeName(sending),
+    ]);
+
     const articulationData = Object.values(json)[0];
 
     if (articulationData) {
-      const collegeName = await getCachedCollegeName(sending);
-
       console.log(`processing articulations for ${collegeName.collegeName}...`);
       const list = createArticulationList(articulationData);
 
       if (list.length >= 2) {
-        list.push(collegeName);
+        list.push(await collegeName);
         return list;
       }
     }
@@ -71,13 +73,32 @@ async function processRequest(request) {
   return null;
 }
 
+async function processChunk(results, chunk) {
+  const chunkResults = await Promise.all(chunk.map(processRequest));
+  results.push(...chunkResults.filter((result) => result !== null));
+
+  console.log("chunk finished");
+}
+
 async function getArticulationData(articulationParams, chunkSize = 4) {
   const results = [];
+  const chunkPromises = [];
 
-  for (let i = 0; i < articulationParams.length; i += chunkSize) {
-    const chunk = articulationParams.slice(i, i + chunkSize);
-    const chunkResults = await Promise.all(chunk.map(processRequest));
-    results.push(...chunkResults.filter((result) => result !== null));
+  const totalChunks = Math.ceil(articulationParams.length / chunkSize);
+
+  for (let i = 0; i < totalChunks; ) {
+    const start = i * chunkSize;
+    const end = start + chunkSize;
+    const chunk = articulationParams.slice(start, end);
+
+    chunkPromises.push(processChunk(results, chunk));
+
+    if (chunkPromises.length === 4 || i === totalChunks - 1) {
+      await Promise.all(chunkPromises);
+      chunkPromises.length = 0;
+    }
+
+    i += 1;
 
     console.log("chunk finished");
   }
