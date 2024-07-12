@@ -57,7 +57,7 @@ async function processRequest(request) {
     if (articulationData) {
       const collegeName = await getCachedCollegeName(sending);
 
-      console.log(`processing articulations for ${collegeName}...`);
+      console.log(`processing articulations for ${collegeName.collegeName}...`);
       const list = createArticulationList(articulationData);
 
       if (list.length >= 2) {
