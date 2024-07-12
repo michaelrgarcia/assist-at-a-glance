@@ -36,25 +36,12 @@ async function getArticulationParams(receivingId, majorKey) {
   return articulationParams;
 }
 
-async function processRequest(request) {
-  const { year, sending, receiving, key } = request;
-  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-
-  const collegeNameCache = new Map();
-
-  async function getCachedCollegeName(sending) {
-    if (!collegeNameCache.has(sending)) {
-      collegeNameCache.set(sending, await getCollegeName(sending));
-    }
-
-    return collegeNameCache.get(sending);
-  }
-
-  try {
-    const [json, collegeName] = await Promise.all([
-      getJson(articulationPage),
-      getCachedCollegeName(sending),
-    ]);
+async function batchPromises(batch) {
+  batch.map(async (request) => {
+    const { year, sending, receiving, key } = request;
+    const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+    const collegeName = getCollegeName(sending);
+    const json = await getJson(articulationPage);
 
     const articulationData = Object.values(json)[0];
 
@@ -67,43 +54,27 @@ async function processRequest(request) {
         return list;
       }
     }
+  });
+}
+
+async function processBatch(batch) {
+  try {
+    return await Promise.all(batchPromises(batch));
   } catch (error) {
-    console.error("Error processing request:", error);
+    console.error("Error processing batch:", error);
   }
   return null;
 }
 
-async function processChunk(results, chunk) {
-  const chunkResults = await Promise.all(chunk.map(processRequest));
-  results.push(...chunkResults.filter((result) => result !== null));
-
-  console.log("chunk finished");
-}
-
-async function getArticulationData(articulationParams, chunkSize = 4) {
+async function getArticulationData(articulationParams) {
+  const concurrencyLimit = 4;
   const results = [];
-  const chunkPromises = [];
 
-  const totalChunks = Math.ceil(articulationParams.length / chunkSize);
-
-  for (let i = 0; i < totalChunks; ) {
-    const start = i * chunkSize;
-    const end = start + chunkSize;
-    const chunk = articulationParams.slice(start, end);
-
-    chunkPromises.push(processChunk(results, chunk));
-
-    if (chunkPromises.length === 4 || i === totalChunks - 1) {
-      await Promise.all(chunkPromises);
-      chunkPromises.length = 0;
-    }
-
-    i += 1;
-
-    console.log("chunk finished");
+  for (let i = 0; i < articulationParams.length; i += concurrencyLimit) {
+    const batch = articulationParams.slice(i, i + concurrencyLimit);
+    const batchResults = await processBatch(batch);
+    results.push(...batchResults);
   }
-
-  console.log("all chunks finished");
 
   return results;
 }
