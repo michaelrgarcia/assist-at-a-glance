@@ -42,6 +42,7 @@ async function processChunk(chunk) {
 
     const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
     const collegeName = await getCollegeName(sending);
+    console.log(`Processing articulations for ${collegeName}...`);
 
     const json = await getJson(articulationPage);
 
@@ -58,6 +59,7 @@ async function processChunk(chunk) {
     }
   });
 
+  console.log(`Chunk finished`);
   return Promise.all(chunkPromises);
 }
 
