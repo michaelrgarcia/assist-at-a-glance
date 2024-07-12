@@ -36,47 +36,50 @@ async function getArticulationParams(receivingId, majorKey) {
   return articulationParams;
 }
 
-async function processChunk(chunk) {
-  const chunkPromises = chunk.map(async (request) => {
-    const { year, sending, receiving, key } = request;
+async function processRequest(request, collegeNames) {
+  const { year, sending, receiving, key } = request;
+  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
 
-    const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-    const collegeName = await getCollegeName(sending);
-    console.log(`Processing articulations for ${collegeName.collegeName}...`);
-
+  try {
     const json = await getJson(articulationPage);
-
     const articulationData = Object.values(json)[0];
 
     if (articulationData) {
       const list = createArticulationList(articulationData);
 
       if (list.length >= 2) {
-        list.push(collegeName);
+        list.push(collegeNames.get(sending));
+        return list;
       }
-
-      return list;
     }
-  });
-
-  console.log(`Chunk finished`);
-  return Promise.all(chunkPromises);
+  } catch (error) {
+    console.error("Error processing request:", error);
+  }
+  return null;
 }
 
 async function getArticulationData(articulationParams, chunkSize = 3) {
-  const chunks = [];
+  const collegeNames = new Map();
+  const uniqueSendingCodes = [
+    ...new Set(articulationParams.map((param) => param.sending)),
+  ];
+  await Promise.all(
+    uniqueSendingCodes.map(async (code) => {
+      collegeNames.set(code, await getCollegeName(code));
+    })
+  );
+
+  const results = [];
 
   for (let i = 0; i < articulationParams.length; i += chunkSize) {
-    chunks.push(articulationParams.slice(i, i + chunkSize));
+    const chunk = articulationParams.slice(i, i + chunkSize);
+    const chunkResults = await Promise.all(
+      chunk.map(processRequest(chunk, collegeNames))
+    );
+    results.push(...chunkResults);
   }
 
-  let results = [];
-  for (const chunk of chunks) {
-    const chunkResults = await processChunk(chunk);
-    results = results.concat(chunkResults);
-  }
-
-  return results;
+  return results.filter((result) => result !== null);
 }
 
 function createArticulationList(articulationData) {
