@@ -16,6 +16,12 @@ async function getJson(link) {
   await browser.close();
 
   return parsedPre;
+
+  // WILL MOVE TO AWS LAMBDA FUNCTION
+  // use puppeteer cluster
+  // will make 5 browsers for 5 requests at a time
+  // might have to rework queue to send an array of links
+  // use formData obj to do that?
 }
 
 function alphaSort(array, array2) {
