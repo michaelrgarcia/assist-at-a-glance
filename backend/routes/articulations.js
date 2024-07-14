@@ -14,14 +14,18 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
   const receiving = req.params.receiving;
   const key = req.params.key;
 
-  const articulationData = await getArticulationData({
-    year,
-    sending,
-    receiving,
-    key,
-  });
+  try {
+    const articulationData = await getArticulationData({
+      year,
+      sending,
+      receiving,
+      key,
+    });
 
-  res.status(200).json(articulationData);
+    res.status(200).json(articulationData);
+  } catch {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 module.exports = router;
