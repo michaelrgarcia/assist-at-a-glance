@@ -34,7 +34,7 @@ router.post("/articulation-data", async (req, res) => {
   try {
     const links = req.body;
 
-    console.log(links);
+    console.dir(links);
     // access chunks of urls from the body
     // send em over to the lambda function
   } catch {
