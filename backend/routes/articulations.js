@@ -28,4 +28,13 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
   }
 });
 
+router.post("/articulation-data", async (req, res) => {
+  try {
+    // access chunks of urls from the body
+    // send em over to the lambda function
+  } catch {
+    res.status(500).json({ error: "Invalid data input" });
+  }
+});
+
 module.exports = router;
