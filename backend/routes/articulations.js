@@ -32,7 +32,7 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
 
 router.post("/articulation-data", async (req, res) => {
   try {
-    const links = req.body.links;
+    const links = req.body;
 
     console.log(links);
     // access chunks of urls from the body
