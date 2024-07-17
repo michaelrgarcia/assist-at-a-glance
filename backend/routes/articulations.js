@@ -8,6 +8,8 @@ const { getArticulationData } = require("../public/articulationTools.js");
 
 const router = express.Router();
 
+router.use(express.urlencoded({ extended: true }));
+
 router.get("/:year/:sending/:receiving/:key", async (req, res) => {
   const year = req.params.year;
   const sending = req.params.sending;
