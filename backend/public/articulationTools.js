@@ -1,40 +1,47 @@
 /* eslint-disable no-undef */
 
-const {
-  seriesBreakdown,
-  getCollegeName,
-  getCommunityColleges,
-} = require("./schoolTools.js");
-const { getJson, deNest, alphaSort, conjoin } = require("./utilities.js");
+const { seriesBreakdown } = require("./schoolTools.js");
+const { deNest, alphaSort, conjoin } = require("./utilities.js");
 
-// parameters will come from the front end (will still use schoolTools functions)
+function getChunkCollegeName(articulationData) {
+  if (articulationData.sendingInstitution) {
+    const sendingData = deNest(articulationData.sendingInstitution);
+    let collegeName;
 
-async function getRawArticulationData(year, sending, receiving, key) {
-  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
+    sendingData.forEach((item) => {
+      if (Array.isArray(item)) {
+        if (item[0].name) {
+          const name = item[0].name;
 
-  const json = await getJson(articulationPage);
-  const articulationData = Object.values(json)[0];
+          collegeName = name;
+        }
+      }
+    });
 
-  return articulationData;
+    return { collegeName };
+  }
 }
 
-async function getArticulationData(params) {
-  const { year, sending, receiving, key } = params;
-  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
-  const collegeName = await getCollegeName(sending);
+function getChunkArticulationData(jsonArray) {
+  const dataChunk = [];
 
-  const json = await getJson(articulationPage);
-  const articulationData = Object.values(json)[0];
+  jsonArray.forEach((json) => {
+    const articulationData = Object.values(json)[0];
+    const collegeName = getChunkCollegeName(articulationData);
+    console.log(collegeName);
 
-  const list = createArticulationList(articulationData);
+    const list = createArticulationList(articulationData);
 
-  if (list) {
-    if (list.length >= 2) {
-      list.push(collegeName);
+    if (list) {
+      if (list.length >= 2) {
+        list.push(collegeName);
+      }
+
+      dataChunk.push(list);
     }
+  });
 
-    return list;
-  }
+  return dataChunk;
 }
 
 function createArticulationList(articulationData) {
@@ -148,6 +155,5 @@ function createGroup(conjunction, groupCourses) {
 
 module.exports = {
   createArticulationList,
-  getArticulationData,
-  getRawArticulationData,
+  getChunkArticulationData,
 };
