@@ -38,13 +38,13 @@ router.post("/articulation-data", async (req, res) => {
 
     const lambdaResponse = fetch(lambdaEndpoint, {
       method: "POST",
-      body: links,
+      body: JSON.stringify(links),
       headers: { "Content-Type": "application/json" },
     });
 
     const clusterJson = await lambdaResponse.json();
 
-    console.dir(links);
+    // console.dir(links);
     console.dir(clusterJson);
     // access chunks of urls from the body
     // send em over to the lambda function
