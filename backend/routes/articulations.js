@@ -36,7 +36,7 @@ router.post("/articulation-data", async (req, res) => {
     const lambdaEndpoint =
       "https://rex5t1umok.execute-api.us-east-2.amazonaws.com/default/assist-cluster-scraper";
 
-    const lambdaResponse = fetch(lambdaEndpoint, {
+    const lambdaResponse = await fetch(lambdaEndpoint, {
       method: "POST",
       body: JSON.stringify(links),
       headers: { "Content-Type": "application/json" },
