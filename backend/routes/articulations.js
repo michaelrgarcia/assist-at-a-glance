@@ -42,10 +42,10 @@ router.post("/articulation-data", async (req, res) => {
       headers: { "Content-Type": "application/json" },
     });
 
-    const clusterJson = await lambdaResponse.json();
+    // const clusterJson = await lambdaResponse.json();
 
     // console.dir(links);
-    console.dir(clusterJson);
+    console.log(lambdaResponse);
     // access chunks of urls from the body
     // send em over to the lambda function
   } catch {
