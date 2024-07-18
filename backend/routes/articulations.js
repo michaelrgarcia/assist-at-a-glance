@@ -33,8 +33,19 @@ router.get("/:year/:sending/:receiving/:key", async (req, res) => {
 router.post("/articulation-data", async (req, res) => {
   try {
     const links = req.body;
+    const lambdaEndpoint =
+      "https://rex5t1umok.execute-api.us-east-2.amazonaws.com/default/assist-cluster-scraper";
+
+    const lambdaResponse = fetch(lambdaEndpoint, {
+      method: "POST",
+      body: links,
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const clusterJson = await lambdaResponse.json();
 
     console.dir(links);
+    console.dir(clusterJson);
     // access chunks of urls from the body
     // send em over to the lambda function
   } catch {
