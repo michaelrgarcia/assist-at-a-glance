@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 
+const { getJson } = require("./utilities.js");
+
 async function getRawArticulationData(year, sending, receiving, key) {
   const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
 
