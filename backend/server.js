@@ -10,12 +10,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const schoolRouter = require("./routes/schools.js");
-const articulationRouter = require("./routes/articulations.js");
 
 app.use(cors());
 
 app.use("/schools", schoolRouter);
-app.use("/articulations", articulationRouter);
 
 app.get("/", (req, res) => {
   res.send("welcome to the transfervision api :)");
