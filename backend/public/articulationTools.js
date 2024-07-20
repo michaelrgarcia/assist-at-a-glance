@@ -3,24 +3,14 @@
 const { seriesBreakdown } = require("./schoolTools.js");
 const { deNest, alphaSort, conjoin } = require("./utilities.js");
 
-function getChunkCollegeName(articulationData) {
-  if (articulationData.sendingInstitution) {
-    const sendingData = deNest(articulationData.sendingInstitution);
-    let collegeName;
+async function getRawArticulationData(year, sending, receiving, key) {
+  const articulationPage = `https://assist.org/api/articulation/Agreements?Key=${year}/${sending}/to/${receiving}/Major/${key}`;
 
-    sendingData.forEach((item) => {
-      if (Array.isArray(item)) {
-        if (item[0].name) {
-          const name = item[0].name;
+  const json = await getJson(articulationPage);
+  const articulationData = Object.values(json)[0];
 
-          collegeName = name;
-        }
-      }
-    });
-
-    return { collegeName };
-  }
-}
+  return articulationData;
+} // move all below code to frontend?
 
 function getChunkArticulationData(jsonArray) {
   const dataChunk = [];
@@ -42,6 +32,25 @@ function getChunkArticulationData(jsonArray) {
   });
 
   return dataChunk;
+}
+
+function getChunkCollegeName(articulationData) {
+  if (articulationData.sendingInstitution) {
+    const sendingData = deNest(articulationData.sendingInstitution);
+    let collegeName;
+
+    sendingData.forEach((item) => {
+      if (Array.isArray(item)) {
+        if (item[0].name) {
+          const name = item[0].name;
+
+          collegeName = name;
+        }
+      }
+    });
+
+    return { collegeName };
+  }
 }
 
 function createArticulationList(articulationData) {
@@ -156,4 +165,5 @@ function createGroup(conjunction, groupCourses) {
 module.exports = {
   createArticulationList,
   getChunkArticulationData,
+  getRawArticulationData,
 };
