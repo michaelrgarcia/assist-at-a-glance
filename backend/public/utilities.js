@@ -1,21 +1,12 @@
 /* eslint-disable no-undef */
 
 const _ = require("lodash");
-const puppeteer = require("puppeteer");
 
 async function getJson(link) {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
-  await page.goto(link, { waitUntil: "networkidle2", timeout: 30000 });
+  const response = await fetch(link);
+  const json = await response.json();
 
-  const parsedPre = await page.evaluate(() => {
-    const pre = document.querySelector("pre");
-    return pre ? JSON.parse(pre.textContent) : null;
-  });
-
-  await browser.close();
-
-  return parsedPre;
+  return json;
 }
 
 function alphaSort(array, array2) {
